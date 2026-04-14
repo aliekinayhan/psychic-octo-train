@@ -1,25 +1,13 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
 
         // ===== STATIC ARRAY =====
         int[] staticArr = {1, 2, 3, 4, 5};
+        int[] staticArr2 = {1, 2, 3, 4, 5, 6};
 
-        // Lookup
-        System.out.println(staticArr[2]); // 3
-
-        // Update
-        staticArr[0] = 99;
-        System.out.println(staticArr[0]); // 99
-
-        // Length
-        System.out.println(staticArr.length); // 5
-
-        // Loop
-        for (int num : staticArr) {
-            System.out.print(num + " ");
-        }
 
         // ===== DYNAMIC ARRAY (ArrayList) =====
         ArrayList<Integer> dynArr = new ArrayList<>();
@@ -51,5 +39,41 @@ public class Main {
         for (int num : dynArr) {
             System.out.print(num + " ");
         }
+
+        System.out.println("****************************");
+        System.out.println(reverseString("Hi my name is Ali"));
+        System.out.println("****************************");
+        System.out.println(mergeArray(staticArr, staticArr2));
     }
+
+    public static String reverseString(String txt) {
+        char[] arr = new char[txt.length()];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = txt.charAt(txt.length() - i - 1);
+        }
+        return new String(arr);
+    }
+
+    public static String mergeArray(int[] nums1, int[] nums2) {
+        ArrayList<Integer> numbers = new ArrayList<>();
+        int i = 0, j = 0;
+        while (i < nums1.length && j < nums2.length) {
+            if (nums1[i]<nums2[j]){
+                numbers.add(nums1[i++]);
+            }else{
+                numbers.add(nums2[j++]);
+            }
+            while (i < nums1.length) {
+                numbers.add(nums1[i++]);
+            }
+
+            while (j < nums2.length) {
+                numbers.add(nums2[j++]);
+            }
+        }
+        return numbers.toString();
+    }
+
 }
+
+
