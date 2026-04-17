@@ -15,6 +15,10 @@ Arrays store elements in **contiguous memory locations** (side by side in RAM). 
 - No iteration required
 - Independent of array size
 
+### Cache Locality
+
+Arrays are cache-friendly because elements are stored contiguously in memory. When the CPU loads one element, nearby elements are also loaded into cache — making iteration significantly faster compared to linked structures.
+
 ### Operations & Complexity
 
 | Operation | Time Complexity | Explanation |
@@ -46,11 +50,17 @@ arr.length;    // size
 
 - Fast index-based access is required
 - Data size is known in advance
-- Minimal insertions/deletions
+- Iteration-heavy operations
+- Index-based lookup tables
+
+### When NOT to Use
+
+- Frequent insertions/deletions at the beginning or middle
+- Data size is unknown or changes frequently
 
 ### Interview Answer
 
-> "Arrays store elements in contiguous memory, allowing O(1) access via direct address calculation. However, insertion and deletion require shifting elements, making them O(n)."
+> "Arrays store elements in contiguous memory, allowing O(1) access via direct address calculation. However, insertion and deletion require shifting elements, making them O(n). Arrays are cache-friendly because contiguous memory allows the CPU to load nearby elements into cache, speeding up iteration."
 
 ---
 
@@ -86,6 +96,10 @@ A dynamic array is an array that **automatically resizes** when it runs out of s
 - Capacity grows exponentially: `4 → 8 → 16 → 32`
 - Resizing is infrequent
 
+### Hidden Cost
+
+After resizing, a dynamic array may have unused capacity. For example, after growing from 4 to 8 slots and only adding 1 element, 3 slots are wasted. This is a space trade-off for avoiding frequent resizing.
+
 ### Key Advantages
 
 - No need to define size in advance
@@ -112,9 +126,14 @@ list.contains(10);   // search — O(n)
 - Frequent additions at the end
 - General-purpose usage
 
+### When NOT to Use
+
+- Frequent insertions/deletions at the beginning
+- Memory is very constrained (unused capacity after resize)
+
 ### Interview Answer
 
-> "Dynamic arrays resize by allocating a larger contiguous block (usually doubling capacity) and copying elements. Therefore, push is amortized O(1), since resizing happens infrequently."
+> "Dynamic arrays resize by allocating a larger contiguous block (usually doubling capacity) and copying elements. Therefore, push is amortized O(1), since resizing happens infrequently. After resizing, unused capacity exists as a space trade-off."
 
 ---
 

@@ -8,6 +8,8 @@ public class Main {
         int[] arr1 = {1, 2, 3, 4, 5, 6};
         int[] arr2 = {1, 2, 3, 2, 5, 6};
         int[] arr3 = {7, 1, 5, 3, 1, 7, 9};
+        String txt = "eko";
+        txt.length()
 
         // PUT — eleman ekle
         map.put("apple", 5);
