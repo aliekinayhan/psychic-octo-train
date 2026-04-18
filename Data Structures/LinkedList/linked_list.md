@@ -69,6 +69,7 @@ Linked lists do not support true index access. Any index-based access requires t
 |---|---|---|
 | Traversal | O(n) | Must follow pointers |
 | Lookup by index | O(n) | No direct access |
+| Insert/Delete at head or tail | O(1) | Head and tail references are stored |
 | Insert/Delete (with reference) | O(1) | Pointer update only |
 | Insert/Delete (without reference) | O(n) | Must find position first |
 
@@ -109,7 +110,8 @@ Linked lists do not support true index access. Any index-based access requires t
 |---|---|---|
 | Memory | Contiguous | Scattered |
 | Lookup | O(1) | O(n) |
-| Insert/Delete | O(n) | O(1) with reference |
+| Insert/Delete at ends | O(n) | O(1) |
+| Insert/Delete middle | O(n) | O(n) to find + O(1) to update |
 | Cache friendly | Yes | No |
 | Size | Fixed / Amortized | Dynamic |
 
@@ -117,26 +119,26 @@ Linked lists do not support true index access. Any index-based access requires t
 
 ## In Java
 
+Java's `LinkedList` is a **doubly linked list** internally. It keeps a direct reference to both the **head** and **tail** nodes, which is why `addFirst`, `addLast`, `removeFirst`, and `removeLast` are all O(1).
+
 ```java
 LinkedList<Integer> list = new LinkedList<>();
 
-list.addFirst(10);     // add to front — O(1)
-list.addLast(20);      // add to end — O(1)
-list.add(1, 99);       // add at index — O(n)
+list.addFirst(10);     // add to front — O(1)  (head reference updated)
+list.addLast(20);      // add to end   — O(1)  (tail reference updated)
+list.add(1, 99);       // add at index — O(n)  (must traverse to position)
 
 list.removeFirst();    // remove from front — O(1)
-list.removeLast();     // remove from end — O(1)
-list.remove(1);        // remove at index — O(n)
+list.removeLast();     // remove from end   — O(1)
+list.remove(1);        // remove at index   — O(n)
 
-list.getFirst();       // view first — O(1)
-list.getLast();        // view last — O(1)
-list.get(1);           // get by index — O(n)
+list.getFirst();       // view first    — O(1)
+list.getLast();        // view last     — O(1)
+list.get(1);           // get by index  — O(n)
 
 list.size();           // size
 list.contains(10);     // search — O(n)
 ```
-
-> Java's `LinkedList` is a **doubly linked list** internally.
 
 ---
 
@@ -165,10 +167,21 @@ null ← 5 ⇄ 10 ⇄ 15 → null
 - Can traverse **forward** (head → tail)
 - Can traverse **backward** (tail → head)
 
+### Why Deletion is Easier in a Doubly Linked List
+
+In a **singly linked list**, to delete a node you need a reference to its *previous* node (to update the `next` pointer). This means you often have to traverse from the head to find the predecessor — O(n).
+
+In a **doubly linked list**, every node already has a `prev` pointer, so deletion only requires updating two pointers — O(1) if you have the node reference.
+
 ### Time Complexity
 
-- Lookup: O(n) — in practice slightly faster (O(n/2)) since we can start from either end
-- Insert/Delete: O(1) if node reference is known
+| Operation | Time | Note |
+|---|---|---|
+| Lookup | O(n) | Must traverse from head or tail |
+| Insert/Delete (with reference) | O(1) | Update prev and next pointers |
+| Insert/Delete (without reference) | O(n) | Must find node first |
+
+> In practice, lookup can start from either end (head or tail), so on average only half the list is traversed. Big O is still O(n), but real-world performance is slightly better for elements near the tail.
 
 ---
 
@@ -184,6 +197,18 @@ null ← 5 ⇄ 10 ⇄ 15 → null
 
 ---
 
+## Circular Linked List (Know It Exists)
+
+In a circular linked list, the tail node points back to the head instead of null — forming a loop.
+
+- Can be singly or doubly circular
+- Useful for: round-robin scheduling, music/video playlists, buffer implementations
+- Java does not have a built-in circular linked list
+
+> You are unlikely to implement one in a junior interview, but knowing what it is and when it's used is enough.
+
+---
+
 ## Interview Answer
 
-> "A linked list is a chain of nodes where each node holds a value and a pointer to the next node. Lookup is O(n) because there is no index-based access — traversal starts from the head. Insertion and deletion are O(1) only if we already have a reference to the node; finding it first is O(n). Unlike arrays, linked lists are not cache-friendly because nodes are scattered in memory."
+> "A linked list is a chain of nodes where each node holds a value and a pointer to the next node. Lookup is O(n) because there is no index-based access — traversal starts from the head. Insertion and deletion are O(1) only if we already have a reference to the node; finding it first is O(n). Unlike arrays, linked lists are not cache-friendly because nodes are scattered in memory. Java's LinkedList is a doubly linked list — each node has both next and previous pointers, which makes deletion easier and allows traversal in both directions. It also keeps head and tail references, so operations at either end are O(1)."
